@@ -4,7 +4,7 @@
 
 using namespace sf;
 
-int ground = 150;
+int ground = 300;
 
 const int H = 12;
 const int W = 40;
@@ -20,19 +20,24 @@ class Player {
         float current_frame;
 
         Player(Texture &image){
+            sprite.setScale(0.5, 0.5);
             sprite.setTexture(image);
-            rect = FloatRect(0, 920, 110, 110);
-            sprite.setTextureRect(IntRect(rect));
+            rect = FloatRect(0, ground, 55, 55);
+            sprite.setTextureRect(IntRect(0, 920, 110, 110));
             dx = dy = 0;
             current_frame = 0;
         }
 
         void update(float time) {
             rect.left += dx*time;
+            CollisionX();
+
             if (!on_ground)
                 dy += 0.0005*time;
             rect.top += dy*time;
             on_ground = false;
+            CollisionY();
+
             if (rect.top > ground) {
                 rect.top = ground;
                 dy = 0;
@@ -48,16 +53,45 @@ class Player {
                 sprite.setTextureRect(IntRect(121*int(current_frame)+121, 920, -110, 110));
 
             sprite.setPosition(rect.left, rect.top);
-
             dx = 0;
         }
+
+        void CollisionX() {
+            //std::cout << (int)rect.top/32 << ' ' << (int)(rect.top + rect.height)/32 << '\n';
+            for (int i = (int)rect.top/32; i < (int)(rect.top + rect.height)/32; ++i)
+                for (int j = (int)rect.left/32; j <= (int)(rect.left + rect.width)/32; ++j) {
+                    if (map_array[i][j] == 'B') {
+                        if (dx > 0)
+                            rect.left = j*32 - rect.width;
+                        else
+                            rect.left = j*32+32;
+                    };
+               };
+        }
+
+        void CollisionY() {
+            for (int i = (int)rect.top/32; i < (int)(rect.top + rect.height)/32; ++i)
+                for (int j = (int)rect.left/32; j < (int)(rect.left + rect.width)/32; ++j) {
+                    if (map_array[i][j] == 'B') {
+                        if (dy > 0) {
+                            rect.top = i*32;
+                            dy = 0;
+                            on_ground = true;
+                        } else {
+                            rect.top = i*32 + 32;
+                            dy = 0;
+                        };
+                    };
+                };
+        }
+
 };
 
 int main(){
     std::ifstream map_file("map.txt");
     char *tmp = new char [W+1];
 
-    RenderWindow window(sf::VideoMode(1000, 1000), "SFML works!");
+    RenderWindow window(VideoMode(W*32, H*32), "Mario");
     
     for (int i = 0; i < H; ++i){
         map_file.getline(tmp, W + 1);
@@ -117,7 +151,7 @@ int main(){
                     rectangle.setFillColor(Color::Green);
                 if (map_array[i][j] == ' ')
                     continue;
-                rectangle.setPosition(i*32, j*32);
+                rectangle.setPosition(j*32, i*32);
                 window.draw(rectangle);
             };
 
