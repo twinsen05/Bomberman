@@ -1,4 +1,4 @@
-BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+BGBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
 B                                B     B
 B                                B     B
 B                                B     B
@@ -9,4 +9,4 @@ BBBBB                            B     B
 B        BB                      BB    B
 B        BB                            B
 B        BB             BB             B
-BBBBBBBBBBBBBB        BBBBBBBBBBBBBBBBBB
+BBBBBBBBBBBBBBBB    BBBBBBBBBBBBBBBBBBBB
