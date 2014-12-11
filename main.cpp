@@ -22,7 +22,7 @@ class Player {
         Player(Texture &image){
             sprite.setScale(0.5, 0.5);
             sprite.setTexture(image);
-            rect = FloatRect(0, ground, 55, 55);
+            rect = FloatRect(32, ground, 55, 55);
             sprite.setTextureRect(IntRect(0, 920, 110, 110));
             dx = dy = 0;
             current_frame = 0;
@@ -30,19 +30,13 @@ class Player {
 
         void update(float time) {
             rect.left += dx*time;
-            CollisionX();
+            Collision(true);
 
             if (!on_ground)
                 dy += 0.0005*time;
             rect.top += dy*time;
             on_ground = false;
-            CollisionY();
-
-            if (rect.top > ground) {
-                rect.top = ground;
-                dy = 0;
-                on_ground = true;
-            };
+            Collision(false);
 
             current_frame += 0.005*time;
             if (current_frame > 10)
@@ -56,33 +50,29 @@ class Player {
             dx = 0;
         }
 
-        void CollisionX() {
-            //std::cout << (int)rect.top/32 << ' ' << (int)(rect.top + rect.height)/32 << '\n';
-            for (int i = (int)rect.top/32; i < (int)(rect.top + rect.height)/32; ++i)
-                for (int j = (int)rect.left/32; j <= (int)(rect.left + rect.width)/32; ++j) {
+        void Collision(bool horis) {
+            for (int i = rect.top/32; i < (rect.top + rect.height)/32; ++i)
+                for (int j = rect.left/32; j < (rect.left + rect.width)/32; ++j) {
                     if (map_array[i][j] == 'B') {
-                        if (dx > 0)
+                        if (horis && (dx > 0))
                             rect.left = j*32 - rect.width;
-                        else
-                            rect.left = j*32+32;
-                    };
-               };
-        }
-
-        void CollisionY() {
-            for (int i = (int)rect.top/32; i < (int)(rect.top + rect.height)/32; ++i)
-                for (int j = (int)rect.left/32; j < (int)(rect.left + rect.width)/32; ++j) {
-                    if (map_array[i][j] == 'B') {
-                        if (dy > 0) {
-                            rect.top = i*32;
+                        if (horis && (dx < 0))
+                            rect.left = (j+1)*32;
+                        if (!horis && dy > 0) {
+                            rect.top = i*32 - rect.height;
                             dy = 0;
                             on_ground = true;
-                        } else {
+                        };
+                        if (!horis && dy < 0){
                             rect.top = i*32 + 32;
                             dy = 0;
                         };
                     };
-                };
+
+                    if (map_array[i][j] == '0') {
+                        map_array[i][j] = ' ';
+                    };
+               };
         }
 
 };
@@ -101,12 +91,13 @@ int main(){
 
     RectangleShape rectangle;
 
-    Texture t;
-    t.loadFromFile("sprite.jpg");
+    Texture player_texture, bound_texture;
+    player_texture.loadFromFile("sprite.jpg");
+    bound_texture.loadFromFile("tileset.png");
 
     float currentFrame = 0;
 
-    Player p(t);
+    Player p(player_texture);
 
     Clock clock;
 
@@ -142,13 +133,15 @@ int main(){
         window.clear();
         
         rectangle.setSize(sf::Vector2f(32, 32));
-
+        rectangle.setTexture(&bound_texture);
         for (int i = 0; i < H; ++i)
             for (int j = 0; j < W; ++j) {
-                if (map_array[i][j] == 'B')
-                    rectangle.setFillColor(Color::White);
-                if (map_array[i][j] == '0')
-                    rectangle.setFillColor(Color::Green);
+                if (map_array[i][j] == 'B') {
+                    rectangle.setTextureRect(IntRect(128, 416, 32, 32));
+                };
+                if (map_array[i][j] == '0') {
+                    rectangle.setTextureRect(IntRect(416, 128, 32, 32));
+                };
                 if (map_array[i][j] == ' ')
                     continue;
                 rectangle.setPosition(j*32, i*32);
