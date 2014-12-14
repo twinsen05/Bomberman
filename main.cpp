@@ -82,7 +82,7 @@ int main(){
     char *tmp = new char [W+1];
 
     RenderWindow window(VideoMode(W*32, H*32), "Mario");
-    
+
     for (int i = 0; i < H; ++i){
         map_file.getline(tmp, W + 1);
         map_array[i] = tmp;
@@ -112,7 +112,7 @@ int main(){
             if (event.type == Event::Closed)
                 window.close();
         }
-        
+
         if (Keyboard::isKeyPressed(Keyboard::Left)) {
             p.dx = -0.1;
         };
@@ -126,12 +126,12 @@ int main(){
                 p.dy = -0.4;
                 p.on_ground = false;
             };
-        };  
+        };
 
         p.update(time);
 
         window.clear();
-        
+
         rectangle.setSize(sf::Vector2f(32, 32));
         rectangle.setTexture(&bound_texture);
         for (int i = 0; i < H; ++i)
