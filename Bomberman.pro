@@ -3,13 +3,16 @@ CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
 
-SOURCES += main.cpp \
+SOURCES += \
     bomb.cpp \
     bomberman.cpp \
     brick.cpp \
     enemy.cpp \
     hiddenstaff.cpp \
-    item.cpp
+    item.cpp \
+    animation.cpp \
+    animationmanager.cpp \
+    main.cpp
 LIBS += -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 
 include(deployment.pri)
@@ -21,5 +24,7 @@ HEADERS += \
     brick.h \
     enemy.h \
     hiddenstaff.h \
-    item.h
+    item.h \
+    animation.h \
+    animationmanager.h
 

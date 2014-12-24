@@ -45,20 +45,24 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = main.cpp \
-		bomb.cpp \
+SOURCES       = bomb.cpp \
 		bomberman.cpp \
 		brick.cpp \
 		enemy.cpp \
 		hiddenstaff.cpp \
-		item.cpp 
-OBJECTS       = main.o \
-		bomb.o \
+		item.cpp \
+		animation.cpp \
+		animationmanager.cpp \
+		main.cpp 
+OBJECTS       = bomb.o \
 		bomberman.o \
 		brick.o \
 		enemy.o \
 		hiddenstaff.o \
-		item.o
+		item.o \
+		animation.o \
+		animationmanager.o \
+		main.o
 DIST          = /opt/qtsdk/5.3/gcc_64/mkspecs/features/spec_pre.prf \
 		/opt/qtsdk/5.3/gcc_64/mkspecs/common/shell-unix.conf \
 		/opt/qtsdk/5.3/gcc_64/mkspecs/common/unix.conf \
@@ -161,13 +165,15 @@ DIST          = /opt/qtsdk/5.3/gcc_64/mkspecs/features/spec_pre.prf \
 		/opt/qtsdk/5.3/gcc_64/mkspecs/features/exceptions.prf \
 		/opt/qtsdk/5.3/gcc_64/mkspecs/features/yacc.prf \
 		/opt/qtsdk/5.3/gcc_64/mkspecs/features/lex.prf \
-		Bomberman.pro main.cpp \
-		bomb.cpp \
+		Bomberman.pro bomb.cpp \
 		bomberman.cpp \
 		brick.cpp \
 		enemy.cpp \
 		hiddenstaff.cpp \
-		item.cpp
+		item.cpp \
+		animation.cpp \
+		animationmanager.cpp \
+		main.cpp
 QMAKE_TARGET  = Bomberman
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = Bomberman
@@ -441,7 +447,9 @@ compiler_clean:
 
 ####### Compile
 
-main.o: main.cpp SFML/Graphics.hpp \
+bomb.o: bomb.cpp bomb.h \
+		item.h \
+		SFML/Graphics.hpp \
 		SFML/Window.hpp \
 		SFML/System.hpp \
 		SFML/Config.hpp \
@@ -505,30 +513,549 @@ main.o: main.cpp SFML/Graphics.hpp \
 		SFML/Graphics/ConvexShape.hpp \
 		SFML/Graphics/Sprite.hpp \
 		SFML/Graphics/Text.hpp
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
-
-bomb.o: bomb.cpp bomb.h \
-		item.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o bomb.o bomb.cpp
 
 bomberman.o: bomberman.cpp bomberman.h \
-		item.h
+		item.h \
+		SFML/Graphics.hpp \
+		SFML/Window.hpp \
+		SFML/System.hpp \
+		SFML/Config.hpp \
+		SFML/System/Clock.hpp \
+		SFML/System/Export.hpp \
+		SFML/System/Time.hpp \
+		SFML/System/Err.hpp \
+		SFML/System/InputStream.hpp \
+		SFML/System/Lock.hpp \
+		SFML/System/NonCopyable.hpp \
+		SFML/System/Mutex.hpp \
+		SFML/System/Sleep.hpp \
+		SFML/System/String.hpp \
+		SFML/System/Thread.hpp \
+		SFML/System/Thread.inl \
+		SFML/System/ThreadLocal.hpp \
+		SFML/System/ThreadLocalPtr.hpp \
+		SFML/System/ThreadLocalPtr.inl \
+		SFML/System/Utf.hpp \
+		SFML/System/Utf.inl \
+		SFML/System/Vector2.hpp \
+		SFML/System/Vector2.inl \
+		SFML/System/Vector3.hpp \
+		SFML/System/Vector3.inl \
+		SFML/Window/Context.hpp \
+		SFML/Window/Export.hpp \
+		SFML/Window/GlResource.hpp \
+		SFML/Window/ContextSettings.hpp \
+		SFML/Window/Event.hpp \
+		SFML/Window/Joystick.hpp \
+		SFML/Window/Keyboard.hpp \
+		SFML/Window/Mouse.hpp \
+		SFML/Window/VideoMode.hpp \
+		SFML/Window/Window.hpp \
+		SFML/Window/WindowHandle.hpp \
+		SFML/Window/WindowStyle.hpp \
+		SFML/Graphics/BlendMode.hpp \
+		SFML/Graphics/Color.hpp \
+		SFML/Graphics/Export.hpp \
+		SFML/Graphics/Font.hpp \
+		SFML/Graphics/Glyph.hpp \
+		SFML/Graphics/Rect.hpp \
+		SFML/Graphics/Rect.inl \
+		SFML/Graphics/Texture.hpp \
+		SFML/Graphics/Image.hpp \
+		SFML/Graphics/RenderStates.hpp \
+		SFML/Graphics/Transform.hpp \
+		SFML/Graphics/RenderTexture.hpp \
+		SFML/Graphics/RenderTarget.hpp \
+		SFML/Graphics/View.hpp \
+		SFML/Graphics/PrimitiveType.hpp \
+		SFML/Graphics/Vertex.hpp \
+		SFML/Graphics/RenderWindow.hpp \
+		SFML/Graphics/Shader.hpp \
+		SFML/Graphics/Shape.hpp \
+		SFML/Graphics/Drawable.hpp \
+		SFML/Graphics/Transformable.hpp \
+		SFML/Graphics/VertexArray.hpp \
+		SFML/Graphics/CircleShape.hpp \
+		SFML/Graphics/RectangleShape.hpp \
+		SFML/Graphics/ConvexShape.hpp \
+		SFML/Graphics/Sprite.hpp \
+		SFML/Graphics/Text.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o bomberman.o bomberman.cpp
 
 brick.o: brick.cpp brick.h \
-		item.h
+		item.h \
+		SFML/Graphics.hpp \
+		SFML/Window.hpp \
+		SFML/System.hpp \
+		SFML/Config.hpp \
+		SFML/System/Clock.hpp \
+		SFML/System/Export.hpp \
+		SFML/System/Time.hpp \
+		SFML/System/Err.hpp \
+		SFML/System/InputStream.hpp \
+		SFML/System/Lock.hpp \
+		SFML/System/NonCopyable.hpp \
+		SFML/System/Mutex.hpp \
+		SFML/System/Sleep.hpp \
+		SFML/System/String.hpp \
+		SFML/System/Thread.hpp \
+		SFML/System/Thread.inl \
+		SFML/System/ThreadLocal.hpp \
+		SFML/System/ThreadLocalPtr.hpp \
+		SFML/System/ThreadLocalPtr.inl \
+		SFML/System/Utf.hpp \
+		SFML/System/Utf.inl \
+		SFML/System/Vector2.hpp \
+		SFML/System/Vector2.inl \
+		SFML/System/Vector3.hpp \
+		SFML/System/Vector3.inl \
+		SFML/Window/Context.hpp \
+		SFML/Window/Export.hpp \
+		SFML/Window/GlResource.hpp \
+		SFML/Window/ContextSettings.hpp \
+		SFML/Window/Event.hpp \
+		SFML/Window/Joystick.hpp \
+		SFML/Window/Keyboard.hpp \
+		SFML/Window/Mouse.hpp \
+		SFML/Window/VideoMode.hpp \
+		SFML/Window/Window.hpp \
+		SFML/Window/WindowHandle.hpp \
+		SFML/Window/WindowStyle.hpp \
+		SFML/Graphics/BlendMode.hpp \
+		SFML/Graphics/Color.hpp \
+		SFML/Graphics/Export.hpp \
+		SFML/Graphics/Font.hpp \
+		SFML/Graphics/Glyph.hpp \
+		SFML/Graphics/Rect.hpp \
+		SFML/Graphics/Rect.inl \
+		SFML/Graphics/Texture.hpp \
+		SFML/Graphics/Image.hpp \
+		SFML/Graphics/RenderStates.hpp \
+		SFML/Graphics/Transform.hpp \
+		SFML/Graphics/RenderTexture.hpp \
+		SFML/Graphics/RenderTarget.hpp \
+		SFML/Graphics/View.hpp \
+		SFML/Graphics/PrimitiveType.hpp \
+		SFML/Graphics/Vertex.hpp \
+		SFML/Graphics/RenderWindow.hpp \
+		SFML/Graphics/Shader.hpp \
+		SFML/Graphics/Shape.hpp \
+		SFML/Graphics/Drawable.hpp \
+		SFML/Graphics/Transformable.hpp \
+		SFML/Graphics/VertexArray.hpp \
+		SFML/Graphics/CircleShape.hpp \
+		SFML/Graphics/RectangleShape.hpp \
+		SFML/Graphics/ConvexShape.hpp \
+		SFML/Graphics/Sprite.hpp \
+		SFML/Graphics/Text.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o brick.o brick.cpp
 
 enemy.o: enemy.cpp enemy.h \
-		item.h
+		item.h \
+		SFML/Graphics.hpp \
+		SFML/Window.hpp \
+		SFML/System.hpp \
+		SFML/Config.hpp \
+		SFML/System/Clock.hpp \
+		SFML/System/Export.hpp \
+		SFML/System/Time.hpp \
+		SFML/System/Err.hpp \
+		SFML/System/InputStream.hpp \
+		SFML/System/Lock.hpp \
+		SFML/System/NonCopyable.hpp \
+		SFML/System/Mutex.hpp \
+		SFML/System/Sleep.hpp \
+		SFML/System/String.hpp \
+		SFML/System/Thread.hpp \
+		SFML/System/Thread.inl \
+		SFML/System/ThreadLocal.hpp \
+		SFML/System/ThreadLocalPtr.hpp \
+		SFML/System/ThreadLocalPtr.inl \
+		SFML/System/Utf.hpp \
+		SFML/System/Utf.inl \
+		SFML/System/Vector2.hpp \
+		SFML/System/Vector2.inl \
+		SFML/System/Vector3.hpp \
+		SFML/System/Vector3.inl \
+		SFML/Window/Context.hpp \
+		SFML/Window/Export.hpp \
+		SFML/Window/GlResource.hpp \
+		SFML/Window/ContextSettings.hpp \
+		SFML/Window/Event.hpp \
+		SFML/Window/Joystick.hpp \
+		SFML/Window/Keyboard.hpp \
+		SFML/Window/Mouse.hpp \
+		SFML/Window/VideoMode.hpp \
+		SFML/Window/Window.hpp \
+		SFML/Window/WindowHandle.hpp \
+		SFML/Window/WindowStyle.hpp \
+		SFML/Graphics/BlendMode.hpp \
+		SFML/Graphics/Color.hpp \
+		SFML/Graphics/Export.hpp \
+		SFML/Graphics/Font.hpp \
+		SFML/Graphics/Glyph.hpp \
+		SFML/Graphics/Rect.hpp \
+		SFML/Graphics/Rect.inl \
+		SFML/Graphics/Texture.hpp \
+		SFML/Graphics/Image.hpp \
+		SFML/Graphics/RenderStates.hpp \
+		SFML/Graphics/Transform.hpp \
+		SFML/Graphics/RenderTexture.hpp \
+		SFML/Graphics/RenderTarget.hpp \
+		SFML/Graphics/View.hpp \
+		SFML/Graphics/PrimitiveType.hpp \
+		SFML/Graphics/Vertex.hpp \
+		SFML/Graphics/RenderWindow.hpp \
+		SFML/Graphics/Shader.hpp \
+		SFML/Graphics/Shape.hpp \
+		SFML/Graphics/Drawable.hpp \
+		SFML/Graphics/Transformable.hpp \
+		SFML/Graphics/VertexArray.hpp \
+		SFML/Graphics/CircleShape.hpp \
+		SFML/Graphics/RectangleShape.hpp \
+		SFML/Graphics/ConvexShape.hpp \
+		SFML/Graphics/Sprite.hpp \
+		SFML/Graphics/Text.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o enemy.o enemy.cpp
 
 hiddenstaff.o: hiddenstaff.cpp hiddenstaff.h \
-		item.h
+		item.h \
+		SFML/Graphics.hpp \
+		SFML/Window.hpp \
+		SFML/System.hpp \
+		SFML/Config.hpp \
+		SFML/System/Clock.hpp \
+		SFML/System/Export.hpp \
+		SFML/System/Time.hpp \
+		SFML/System/Err.hpp \
+		SFML/System/InputStream.hpp \
+		SFML/System/Lock.hpp \
+		SFML/System/NonCopyable.hpp \
+		SFML/System/Mutex.hpp \
+		SFML/System/Sleep.hpp \
+		SFML/System/String.hpp \
+		SFML/System/Thread.hpp \
+		SFML/System/Thread.inl \
+		SFML/System/ThreadLocal.hpp \
+		SFML/System/ThreadLocalPtr.hpp \
+		SFML/System/ThreadLocalPtr.inl \
+		SFML/System/Utf.hpp \
+		SFML/System/Utf.inl \
+		SFML/System/Vector2.hpp \
+		SFML/System/Vector2.inl \
+		SFML/System/Vector3.hpp \
+		SFML/System/Vector3.inl \
+		SFML/Window/Context.hpp \
+		SFML/Window/Export.hpp \
+		SFML/Window/GlResource.hpp \
+		SFML/Window/ContextSettings.hpp \
+		SFML/Window/Event.hpp \
+		SFML/Window/Joystick.hpp \
+		SFML/Window/Keyboard.hpp \
+		SFML/Window/Mouse.hpp \
+		SFML/Window/VideoMode.hpp \
+		SFML/Window/Window.hpp \
+		SFML/Window/WindowHandle.hpp \
+		SFML/Window/WindowStyle.hpp \
+		SFML/Graphics/BlendMode.hpp \
+		SFML/Graphics/Color.hpp \
+		SFML/Graphics/Export.hpp \
+		SFML/Graphics/Font.hpp \
+		SFML/Graphics/Glyph.hpp \
+		SFML/Graphics/Rect.hpp \
+		SFML/Graphics/Rect.inl \
+		SFML/Graphics/Texture.hpp \
+		SFML/Graphics/Image.hpp \
+		SFML/Graphics/RenderStates.hpp \
+		SFML/Graphics/Transform.hpp \
+		SFML/Graphics/RenderTexture.hpp \
+		SFML/Graphics/RenderTarget.hpp \
+		SFML/Graphics/View.hpp \
+		SFML/Graphics/PrimitiveType.hpp \
+		SFML/Graphics/Vertex.hpp \
+		SFML/Graphics/RenderWindow.hpp \
+		SFML/Graphics/Shader.hpp \
+		SFML/Graphics/Shape.hpp \
+		SFML/Graphics/Drawable.hpp \
+		SFML/Graphics/Transformable.hpp \
+		SFML/Graphics/VertexArray.hpp \
+		SFML/Graphics/CircleShape.hpp \
+		SFML/Graphics/RectangleShape.hpp \
+		SFML/Graphics/ConvexShape.hpp \
+		SFML/Graphics/Sprite.hpp \
+		SFML/Graphics/Text.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o hiddenstaff.o hiddenstaff.cpp
 
-item.o: item.cpp item.h
+item.o: item.cpp item.h \
+		SFML/Graphics.hpp \
+		SFML/Window.hpp \
+		SFML/System.hpp \
+		SFML/Config.hpp \
+		SFML/System/Clock.hpp \
+		SFML/System/Export.hpp \
+		SFML/System/Time.hpp \
+		SFML/System/Err.hpp \
+		SFML/System/InputStream.hpp \
+		SFML/System/Lock.hpp \
+		SFML/System/NonCopyable.hpp \
+		SFML/System/Mutex.hpp \
+		SFML/System/Sleep.hpp \
+		SFML/System/String.hpp \
+		SFML/System/Thread.hpp \
+		SFML/System/Thread.inl \
+		SFML/System/ThreadLocal.hpp \
+		SFML/System/ThreadLocalPtr.hpp \
+		SFML/System/ThreadLocalPtr.inl \
+		SFML/System/Utf.hpp \
+		SFML/System/Utf.inl \
+		SFML/System/Vector2.hpp \
+		SFML/System/Vector2.inl \
+		SFML/System/Vector3.hpp \
+		SFML/System/Vector3.inl \
+		SFML/Window/Context.hpp \
+		SFML/Window/Export.hpp \
+		SFML/Window/GlResource.hpp \
+		SFML/Window/ContextSettings.hpp \
+		SFML/Window/Event.hpp \
+		SFML/Window/Joystick.hpp \
+		SFML/Window/Keyboard.hpp \
+		SFML/Window/Mouse.hpp \
+		SFML/Window/VideoMode.hpp \
+		SFML/Window/Window.hpp \
+		SFML/Window/WindowHandle.hpp \
+		SFML/Window/WindowStyle.hpp \
+		SFML/Graphics/BlendMode.hpp \
+		SFML/Graphics/Color.hpp \
+		SFML/Graphics/Export.hpp \
+		SFML/Graphics/Font.hpp \
+		SFML/Graphics/Glyph.hpp \
+		SFML/Graphics/Rect.hpp \
+		SFML/Graphics/Rect.inl \
+		SFML/Graphics/Texture.hpp \
+		SFML/Graphics/Image.hpp \
+		SFML/Graphics/RenderStates.hpp \
+		SFML/Graphics/Transform.hpp \
+		SFML/Graphics/RenderTexture.hpp \
+		SFML/Graphics/RenderTarget.hpp \
+		SFML/Graphics/View.hpp \
+		SFML/Graphics/PrimitiveType.hpp \
+		SFML/Graphics/Vertex.hpp \
+		SFML/Graphics/RenderWindow.hpp \
+		SFML/Graphics/Shader.hpp \
+		SFML/Graphics/Shape.hpp \
+		SFML/Graphics/Drawable.hpp \
+		SFML/Graphics/Transformable.hpp \
+		SFML/Graphics/VertexArray.hpp \
+		SFML/Graphics/CircleShape.hpp \
+		SFML/Graphics/RectangleShape.hpp \
+		SFML/Graphics/ConvexShape.hpp \
+		SFML/Graphics/Sprite.hpp \
+		SFML/Graphics/Text.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o item.o item.cpp
+
+animation.o: animation.cpp animation.h \
+		SFML/Graphics.hpp \
+		SFML/Window.hpp \
+		SFML/System.hpp \
+		SFML/Config.hpp \
+		SFML/System/Clock.hpp \
+		SFML/System/Export.hpp \
+		SFML/System/Time.hpp \
+		SFML/System/Err.hpp \
+		SFML/System/InputStream.hpp \
+		SFML/System/Lock.hpp \
+		SFML/System/NonCopyable.hpp \
+		SFML/System/Mutex.hpp \
+		SFML/System/Sleep.hpp \
+		SFML/System/String.hpp \
+		SFML/System/Thread.hpp \
+		SFML/System/Thread.inl \
+		SFML/System/ThreadLocal.hpp \
+		SFML/System/ThreadLocalPtr.hpp \
+		SFML/System/ThreadLocalPtr.inl \
+		SFML/System/Utf.hpp \
+		SFML/System/Utf.inl \
+		SFML/System/Vector2.hpp \
+		SFML/System/Vector2.inl \
+		SFML/System/Vector3.hpp \
+		SFML/System/Vector3.inl \
+		SFML/Window/Context.hpp \
+		SFML/Window/Export.hpp \
+		SFML/Window/GlResource.hpp \
+		SFML/Window/ContextSettings.hpp \
+		SFML/Window/Event.hpp \
+		SFML/Window/Joystick.hpp \
+		SFML/Window/Keyboard.hpp \
+		SFML/Window/Mouse.hpp \
+		SFML/Window/VideoMode.hpp \
+		SFML/Window/Window.hpp \
+		SFML/Window/WindowHandle.hpp \
+		SFML/Window/WindowStyle.hpp \
+		SFML/Graphics/BlendMode.hpp \
+		SFML/Graphics/Color.hpp \
+		SFML/Graphics/Export.hpp \
+		SFML/Graphics/Font.hpp \
+		SFML/Graphics/Glyph.hpp \
+		SFML/Graphics/Rect.hpp \
+		SFML/Graphics/Rect.inl \
+		SFML/Graphics/Texture.hpp \
+		SFML/Graphics/Image.hpp \
+		SFML/Graphics/RenderStates.hpp \
+		SFML/Graphics/Transform.hpp \
+		SFML/Graphics/RenderTexture.hpp \
+		SFML/Graphics/RenderTarget.hpp \
+		SFML/Graphics/View.hpp \
+		SFML/Graphics/PrimitiveType.hpp \
+		SFML/Graphics/Vertex.hpp \
+		SFML/Graphics/RenderWindow.hpp \
+		SFML/Graphics/Shader.hpp \
+		SFML/Graphics/Shape.hpp \
+		SFML/Graphics/Drawable.hpp \
+		SFML/Graphics/Transformable.hpp \
+		SFML/Graphics/VertexArray.hpp \
+		SFML/Graphics/CircleShape.hpp \
+		SFML/Graphics/RectangleShape.hpp \
+		SFML/Graphics/ConvexShape.hpp \
+		SFML/Graphics/Sprite.hpp \
+		SFML/Graphics/Text.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o animation.o animation.cpp
+
+animationmanager.o: animationmanager.cpp animationmanager.h \
+		animation.h \
+		SFML/Graphics.hpp \
+		SFML/Window.hpp \
+		SFML/System.hpp \
+		SFML/Config.hpp \
+		SFML/System/Clock.hpp \
+		SFML/System/Export.hpp \
+		SFML/System/Time.hpp \
+		SFML/System/Err.hpp \
+		SFML/System/InputStream.hpp \
+		SFML/System/Lock.hpp \
+		SFML/System/NonCopyable.hpp \
+		SFML/System/Mutex.hpp \
+		SFML/System/Sleep.hpp \
+		SFML/System/String.hpp \
+		SFML/System/Thread.hpp \
+		SFML/System/Thread.inl \
+		SFML/System/ThreadLocal.hpp \
+		SFML/System/ThreadLocalPtr.hpp \
+		SFML/System/ThreadLocalPtr.inl \
+		SFML/System/Utf.hpp \
+		SFML/System/Utf.inl \
+		SFML/System/Vector2.hpp \
+		SFML/System/Vector2.inl \
+		SFML/System/Vector3.hpp \
+		SFML/System/Vector3.inl \
+		SFML/Window/Context.hpp \
+		SFML/Window/Export.hpp \
+		SFML/Window/GlResource.hpp \
+		SFML/Window/ContextSettings.hpp \
+		SFML/Window/Event.hpp \
+		SFML/Window/Joystick.hpp \
+		SFML/Window/Keyboard.hpp \
+		SFML/Window/Mouse.hpp \
+		SFML/Window/VideoMode.hpp \
+		SFML/Window/Window.hpp \
+		SFML/Window/WindowHandle.hpp \
+		SFML/Window/WindowStyle.hpp \
+		SFML/Graphics/BlendMode.hpp \
+		SFML/Graphics/Color.hpp \
+		SFML/Graphics/Export.hpp \
+		SFML/Graphics/Font.hpp \
+		SFML/Graphics/Glyph.hpp \
+		SFML/Graphics/Rect.hpp \
+		SFML/Graphics/Rect.inl \
+		SFML/Graphics/Texture.hpp \
+		SFML/Graphics/Image.hpp \
+		SFML/Graphics/RenderStates.hpp \
+		SFML/Graphics/Transform.hpp \
+		SFML/Graphics/RenderTexture.hpp \
+		SFML/Graphics/RenderTarget.hpp \
+		SFML/Graphics/View.hpp \
+		SFML/Graphics/PrimitiveType.hpp \
+		SFML/Graphics/Vertex.hpp \
+		SFML/Graphics/RenderWindow.hpp \
+		SFML/Graphics/Shader.hpp \
+		SFML/Graphics/Shape.hpp \
+		SFML/Graphics/Drawable.hpp \
+		SFML/Graphics/Transformable.hpp \
+		SFML/Graphics/VertexArray.hpp \
+		SFML/Graphics/CircleShape.hpp \
+		SFML/Graphics/RectangleShape.hpp \
+		SFML/Graphics/ConvexShape.hpp \
+		SFML/Graphics/Sprite.hpp \
+		SFML/Graphics/Text.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o animationmanager.o animationmanager.cpp
+
+main.o: main.cpp SFML/Graphics.hpp \
+		SFML/Window.hpp \
+		SFML/System.hpp \
+		SFML/Config.hpp \
+		SFML/System/Clock.hpp \
+		SFML/System/Export.hpp \
+		SFML/System/Time.hpp \
+		SFML/System/Err.hpp \
+		SFML/System/InputStream.hpp \
+		SFML/System/Lock.hpp \
+		SFML/System/NonCopyable.hpp \
+		SFML/System/Mutex.hpp \
+		SFML/System/Sleep.hpp \
+		SFML/System/String.hpp \
+		SFML/System/Thread.hpp \
+		SFML/System/Thread.inl \
+		SFML/System/ThreadLocal.hpp \
+		SFML/System/ThreadLocalPtr.hpp \
+		SFML/System/ThreadLocalPtr.inl \
+		SFML/System/Utf.hpp \
+		SFML/System/Utf.inl \
+		SFML/System/Vector2.hpp \
+		SFML/System/Vector2.inl \
+		SFML/System/Vector3.hpp \
+		SFML/System/Vector3.inl \
+		SFML/Window/Context.hpp \
+		SFML/Window/Export.hpp \
+		SFML/Window/GlResource.hpp \
+		SFML/Window/ContextSettings.hpp \
+		SFML/Window/Event.hpp \
+		SFML/Window/Joystick.hpp \
+		SFML/Window/Keyboard.hpp \
+		SFML/Window/Mouse.hpp \
+		SFML/Window/VideoMode.hpp \
+		SFML/Window/Window.hpp \
+		SFML/Window/WindowHandle.hpp \
+		SFML/Window/WindowStyle.hpp \
+		SFML/Graphics/BlendMode.hpp \
+		SFML/Graphics/Color.hpp \
+		SFML/Graphics/Export.hpp \
+		SFML/Graphics/Font.hpp \
+		SFML/Graphics/Glyph.hpp \
+		SFML/Graphics/Rect.hpp \
+		SFML/Graphics/Rect.inl \
+		SFML/Graphics/Texture.hpp \
+		SFML/Graphics/Image.hpp \
+		SFML/Graphics/RenderStates.hpp \
+		SFML/Graphics/Transform.hpp \
+		SFML/Graphics/RenderTexture.hpp \
+		SFML/Graphics/RenderTarget.hpp \
+		SFML/Graphics/View.hpp \
+		SFML/Graphics/PrimitiveType.hpp \
+		SFML/Graphics/Vertex.hpp \
+		SFML/Graphics/RenderWindow.hpp \
+		SFML/Graphics/Shader.hpp \
+		SFML/Graphics/Shape.hpp \
+		SFML/Graphics/Drawable.hpp \
+		SFML/Graphics/Transformable.hpp \
+		SFML/Graphics/VertexArray.hpp \
+		SFML/Graphics/CircleShape.hpp \
+		SFML/Graphics/RectangleShape.hpp \
+		SFML/Graphics/ConvexShape.hpp \
+		SFML/Graphics/Sprite.hpp \
+		SFML/Graphics/Text.hpp \
+		animationmanager.h \
+		animation.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
 ####### Install
 
