@@ -3,8 +3,7 @@
 
 #include "item.h"
 
-class Bomb : public Item
-{
+class Bomb : public Item {
 public:
     Bomb();
 };

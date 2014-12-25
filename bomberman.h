@@ -9,15 +9,12 @@ using ::std::map;
 #include "item.h"
 #include "animationmanager.h"
 
-class Bomberman : public Item
-{
+class Bomberman : public Item {
 public:
-    double x, y, dx, dy, w, h;
-    AnimationManager animation;
     bool place_bomb;
     int direction;
 
-    enum {STAY, WALK, PLACE} STATE;
+    enum {STAY, WALK, WALK_UP, WALK_DOWN, PLACE} STATE;
     map<string, bool> key;
 
     Bomberman();

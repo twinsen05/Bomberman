@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "animationmanager.h"
+#include "bomberman.h"
 
 using namespace sf;
 
@@ -23,15 +24,16 @@ int main(){
 
 
     Clock clock;
+    Bomberman bomberman(animation);
 
     while (window.isOpen())
     {
         float time = clock.getElapsedTime().asMicroseconds();
         clock.restart();
 
-        time = time/500;
+        time = time/700;
 
-        if (time > 20) time = 20;
+        if (time > 40) time = 40;
 
         Event event;
         while (window.pollEvent(event))
@@ -43,26 +45,30 @@ int main(){
         animation.Set("stay");
         if (Keyboard::isKeyPressed(Keyboard::Up))
         {
-            animation.Set("walk-up");
+            bomberman.key["Up"] = true;
         }
         if (Keyboard::isKeyPressed(Keyboard::Down))
         {
-            animation.Set("walk-down");
+            bomberman.key["Down"] = true;
         }
         if (Keyboard::isKeyPressed(Keyboard::Left))
         {
-            animation.Set("walk");
+            bomberman.key["Left"] = true;
         }
         if (Keyboard::isKeyPressed(Keyboard::Right))
         {
-            animation.Set("walk");
+            bomberman.key["Right"] = true;
+        }
+        if (Keyboard::isKeyPressed(Keyboard::Space))
+        {
+            bomberman.key["Space"] = true;
         }
 
 
-        animation.Tick(time);
-        window.clear(Color(255,255,255));
-        animation.Draw(window, 50, 100);
 
+        bomberman.Update(time);
+        window.clear(Color(255,255,255));
+        bomberman.Draw(window);
         window.display();
     }
 
